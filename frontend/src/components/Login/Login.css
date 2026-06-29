@@ -1,0 +1,259 @@
+/* ==========================================================================
+   LOGIN.CSS - Premium Glass Login (Responsive)
+   Replace your existing Login.css with this.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    margin:0;
+    background:#060912;
+}
+
+.login-page{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:24px;
+    background:
+        radial-gradient(circle at top left,rgba(88,166,255,.15),transparent 35%),
+        radial-gradient(circle at bottom right,rgba(163,113,247,.15),transparent 35%),
+        #060912;
+    overflow:hidden;
+    position:relative;
+}
+
+.login-page::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+    background-size:42px 42px;
+    pointer-events:none;
+}
+
+.login-page::after{
+    content:"";
+    position:absolute;
+    width:520px;
+    height:520px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(88,166,255,.18),transparent 70%);
+    filter:blur(70px);
+    animation:float 12s ease-in-out infinite alternate;
+}
+
+@keyframes float{
+    from{transform:translate(-120px,-60px);}
+    to{transform:translate(120px,80px);}
+}
+
+.auth-container{
+    width:450px;
+    max-width:100%;
+    padding:48px 40px;
+    background:rgba(12,18,28,.92);
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    position:relative;
+    z-index:5;
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.auth-container::before{
+    content:"";
+    position:absolute;
+    inset:-1px;
+    border-radius:22px;
+    padding:1px;
+    background:linear-gradient(135deg,#58a6ff,#a371f7,#3fb950);
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    pointer-events:none;
+}
+
+.auth-title{
+    text-align:center;
+    font-size:42px;
+    font-weight:700;
+    background:linear-gradient(135deg,#ffffff,#76b7ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:10px;
+}
+
+.auth-subtitle{
+    text-align:center;
+    color:#94a3b8;
+    font-size:16px;
+    line-height:1.5;
+    margin-bottom:34px;
+}
+
+.input-group{
+    margin-bottom:24px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:8px;
+    color:#b0bccb;
+    font-size:12px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.input-group input{
+    width:100%;
+    padding:16px 18px;
+    border-radius:14px;
+    border:1.5px solid #283241;
+    background:#111827;
+    color:#fff;
+    font-size:15px;
+    font-family:"JetBrains Mono",monospace;
+    transition:.25s;
+}
+
+.input-group input::placeholder{
+    color:#6b7280;
+    font-family:Inter,sans-serif;
+}
+
+.input-group input:hover{
+    border-color:#3d4b5d;
+}
+
+.input-group input:focus{
+    outline:none;
+    border-color:#58a6ff;
+    box-shadow:0 0 0 4px rgba(88,166,255,.15);
+}
+
+.auth-btn{
+    width:100%;
+    padding:16px;
+    margin-top:6px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    color:#fff;
+    font-size:17px;
+    font-weight:600;
+    background:linear-gradient(135deg,#238636,#2ea043);
+    transition:.25s;
+}
+
+.auth-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(46,160,67,.35);
+}
+
+.auth-btn:active{
+    transform:scale(.98);
+}
+
+.message{
+    margin-top:22px;
+    padding:14px;
+    border-radius:12px;
+    background:rgba(46,160,67,.12);
+    border:1px solid rgba(46,160,67,.3);
+    color:#3fb950;
+    text-align:center;
+    font-size:14px;
+}
+
+.auth-footer{
+    margin-top:30px;
+    text-align:center;
+    color:#8b949e;
+    font-size:14px;
+}
+
+.auth-footer span{
+    margin-left:5px;
+    color:#58a6ff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.auth-footer span:hover{
+    color:#7cc0ff;
+    text-decoration:underline;
+}
+
+@media (max-width:768px){
+
+.auth-container{
+    width:100%;
+    max-width:440px;
+    padding:40px 28px;
+}
+
+.auth-title{
+    font-size:34px;
+}
+
+.auth-subtitle{
+    font-size:15px;
+}
+
+}
+
+@media (max-width:480px){
+
+.login-page{
+    padding:16px;
+}
+
+.auth-container{
+    padding:32px 20px;
+    border-radius:18px;
+}
+
+.auth-title{
+    font-size:30px;
+}
+
+.auth-subtitle{
+    font-size:14px;
+    margin-bottom:28px;
+}
+
+.input-group{
+    margin-bottom:20px;
+}
+
+.input-group input{
+    padding:15px;
+}
+
+.auth-btn{
+    padding:15px;
+}
+
+.auth-footer{
+    font-size:13px;
+}
+
+}
