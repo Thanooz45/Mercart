@@ -153,10 +153,35 @@ const login = async (req, res) => {
           });
         }
 
-        return res.status(200).json({
-          success: true,
-          message: "Login Successful",
-        });
+        const token=jwt.sign(
+          {
+            id:user.id,
+            name:user.name,
+            email:user.email,
+          },
+          process.env.JWT_SECRET,
+          {
+            expiresIn:"1d",
+          }
+        );
+
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false, // true after deployment with HTTPS
+            sameSite: "lax",
+            maxAge: 24 * 60 * 60 * 1000,
+          });
+
+          return res.status(200).json({
+            success: true,
+            message: "Login Successful",
+            user: {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+            },
+          });
       }
     );
   } catch (error) {

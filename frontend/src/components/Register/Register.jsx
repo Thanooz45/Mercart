@@ -11,39 +11,49 @@ const Register=()=>{
     const navigate=useNavigate();
 
 
+    const [message, setMessage] = useState("");
+
     const onRegister = async (event) => {
         event.preventDefault();
         setSubmitted(true);
 
         try {
             const response = await fetch("http://localhost:5000/api/auth/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                name,
-                email,
-                password,
-            }),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 setRegistered(true);
-            alert(data.message);
-            navigate("/login");
+                setMessage(data.message);
+
+                setName("");
+                setEmail("");
+                setPassword("");
+
+                setTimeout(() => {
+                    navigate("/login");
+                }, 1500);
             } else {
                 setRegistered(false);
-            alert(data.message);
+                setMessage(data.message);
             }
         } catch (error) {
-            alert("Server Error");
             console.error(error);
+            setRegistered(false);
+            setMessage("Server Error");
         }
     };
-
 
 
     const onChangeName=(event)=> setName(event.target.value);
@@ -102,8 +112,8 @@ const Register=()=>{
             </form>
 
             {submitted && (
-                <p className="message">
-                    {isRegistered ? "Registered Successfully" : "Registration Failed"}
+                <p className={`message ${isRegistered ? "success" : "error"}`}>
+                    {message}
                 </p>
             )}
 
