@@ -211,8 +211,69 @@ const logout = (req, res) => {
 };
 
 
+const updateProfile = (req, res) => {
+    const { name, email } = req.body;
+    const id = req.user.id;
+
+    if (!name || !email) {
+        return res.status(400).json({
+            success: false,
+            message: "All fields are required",
+        });
+    }
+
+    db.query(
+        "UPDATE users SET name = ?, email = ? WHERE id = ?",
+        [name, email.toLowerCase(), id],
+        (err, result) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Database Error",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: "Profile updated successfully",
+            });
+        }
+    );
+};
+
+
+
+const getProfile = (req, res) => {
+    db.query(
+        "SELECT id, name, email FROM users WHERE id = ?",
+        [req.user.id],
+        (err, result) => {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: "Database Error",
+                });
+            }
+
+            if (result.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "User not found",
+                });
+            }
+
+            return res.status(200).json({
+                success: true,
+                user: result[0],
+            });
+        }
+    );
+};
+
 module.exports = {
   register,
   login,
   logout,
+  getProfile,
+  updateProfile,
 };
