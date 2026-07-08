@@ -27,15 +27,19 @@ function Login() {
                 }),
             });
 
-            const data=await response.json();
+            const data = await response.json();
 
-            if (response.ok) {
-                setMessage(data.message);
+if (response.ok) {
+    // Save logged-in user
+    localStorage.setItem("user", JSON.stringify(data.user));
 
-                setTimeout(() => {
-                    navigate("/home");
-                }, 1000);
-            } else {
+    setMessage(data.message);
+
+    setTimeout(() => {
+        navigate("/home");
+    }, 1000);
+}
+             else {
                 setMessage(data.message);
 
                 if (data.message === "User not found") {

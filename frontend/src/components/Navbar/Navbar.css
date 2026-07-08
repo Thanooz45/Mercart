@@ -1,0 +1,83 @@
+.navbar{
+    height:70px;
+    width:100%;
+    background:#131921;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 40px;
+
+    box-sizing:border-box;
+
+    position:sticky;
+    top:0;
+
+    z-index:1000;
+}
+
+.navbar-logo a{
+    color:white;
+    font-size:28px;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.navbar-search{
+    width:45%;
+
+    display:flex;
+}
+
+.navbar-search input{
+
+    flex:1;
+
+    padding:11px;
+
+    border:none;
+
+    outline:none;
+
+    font-size:16px;
+
+    border-radius:6px 0 0 6px;
+
+}
+
+.navbar-search button{
+
+    width:60px;
+
+    border:none;
+
+    background:#febd69;
+
+    cursor:pointer;
+
+    border-radius:0 6px 6px 0;
+
+    font-size:18px;
+
+}
+
+.navbar-links{
+
+    display:flex;
+
+    gap:25px;
+
+    align-items:center;
+
+}
+
+.navbar-links a{
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+}

@@ -1,0 +1,58 @@
+.success-container{
+    min-height:100vh;
+    background:#f6f7fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.success-card{
+    width:550px;
+    background:white;
+    padding:50px;
+    text-align:center;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.tick{
+    width:100px;
+    height:100px;
+    margin:auto;
+    border-radius:50%;
+    background:#22c55e;
+    color:white;
+    font-size:60px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.success-card h1{
+    margin-bottom:15px;
+}
+
+.success-card p{
+    color:#666;
+    margin-bottom:25px;
+}
+
+.success-card h3{
+    color:#ff6b00;
+    margin-bottom:35px;
+}
+
+.success-card button{
+    padding:15px 40px;
+    background:#111827;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:17px;
+}
+
+.success-card button:hover{
+    background:#ff9800;
+}

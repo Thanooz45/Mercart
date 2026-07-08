@@ -1,0 +1,131 @@
+.checkout-container {
+    display: flex;
+    gap: 40px;
+    padding: 50px 70px;
+    background: #f6f7fb;
+    min-height: 100vh;
+}
+
+.checkout-left,
+.checkout-right {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+.checkout-left {
+    flex: 2;
+}
+
+.checkout-right {
+    flex: 1;
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+}
+
+.checkout-left h2,
+.checkout-right h2 {
+    margin-bottom: 25px;
+    color: #111827;
+}
+
+.checkout-left input,
+.checkout-left textarea {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+    box-sizing: border-box;
+}
+
+.checkout-left input:focus,
+.checkout-left textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 8px rgba(37,99,235,.2);
+}
+
+.checkout-left textarea {
+    resize: none;
+    height: 120px;
+}
+
+.checkout-right p {
+    color: #6b7280;
+    margin-bottom: 10px;
+}
+
+.checkout-right h3 {
+    color: #ff6b00;
+    margin-bottom: 20px;
+}
+
+.checkout-right hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+}
+
+.checkout-right button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 25px;
+    border: none;
+    border-radius: 10px;
+    background: #111827;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.checkout-right button:hover {
+    background: #ff9800;
+}
+
+@media (max-width: 900px) {
+    .checkout-container {
+        flex-direction: column;
+        padding: 30px 20px;
+    }
+
+    .checkout-right {
+        position: static;
+    }
+}
+.summary-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:20px 0;
+}
+
+.summary-item h4{
+    margin-bottom:6px;
+}
+
+.summary-item p{
+    color:#666;
+    font-size:14px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin:15px 0;
+    font-size:16px;
+}
+
+.summary-total{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+    font-size:22px;
+    font-weight:bold;
+}
