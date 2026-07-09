@@ -4,15 +4,17 @@
     display:flex;
     justify-content:center;
     align-items:center;
+    padding:100px 18px 90px;
 }
 
 .success-card{
-    width:550px;
+    width:min(550px,100%);
     background:white;
-    padding:50px;
+    padding:46px;
     text-align:center;
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    border:1px solid #e8edf3;
+    border-radius:16px;
+    box-shadow:0 16px 36px rgba(17,24,39,.1);
 }
 
 .tick{
@@ -22,37 +24,94 @@
     border-radius:50%;
     background:#22c55e;
     color:white;
-    font-size:60px;
+    font-size:42px;
     display:flex;
     justify-content:center;
     align-items:center;
     margin-bottom:25px;
 }
 
+.success-kicker{
+    margin:0 0 8px;
+    color:#0f8a3c;
+    font-size:14px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
 .success-card h1{
     margin-bottom:15px;
+    color:#111827;
 }
 
 .success-card p{
     color:#666;
-    margin-bottom:25px;
+    margin-bottom:20px;
+    line-height:1.6;
 }
 
 .success-card h3{
     color:#ff6b00;
-    margin-bottom:35px;
+    margin:0 0 12px;
+}
+
+.success-card h4{
+    margin:0 0 30px;
+    color:#374151;
+}
+
+.success-actions{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
 }
 
 .success-card button{
-    padding:15px 40px;
+    min-width:155px;
+    padding:14px 24px;
     background:#111827;
     color:white;
     border:none;
-    border-radius:10px;
+    border-radius:9px;
     cursor:pointer;
-    font-size:17px;
+    font-size:16px;
+    font-weight:800;
+    transition:.2s ease;
 }
 
 .success-card button:hover{
     background:#ff9800;
+    color:#111827;
+    transform:translateY(-2px);
+}
+
+.success-card button.secondary{
+    background:#f3f4f6;
+    color:#111827;
+}
+
+.success-card button.secondary:hover{
+    background:#e5e7eb;
+}
+
+@media(max-width:520px){
+    .success-card{
+        padding:34px 20px;
+    }
+
+    .tick{
+        width:82px;
+        height:82px;
+        font-size:34px;
+    }
+
+    .success-actions{
+        display:grid;
+        grid-template-columns:1fr;
+    }
+
+    .success-card button{
+        width:100%;
+    }
 }

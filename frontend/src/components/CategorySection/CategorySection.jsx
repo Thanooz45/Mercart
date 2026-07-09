@@ -1,32 +1,70 @@
 import "./CategorySection.css";
+import { useNavigate } from "react-router-dom";
 
-const categories = [
-    "Electronics",
-    "Fashion",
-    "Mobiles",
-    "Books",
-    "Home",
-    "Sports"
-];
+import {
+  FaLaptop,
+  FaTshirt,
+  FaCouch,
+  FaFootballBall,
+  FaBook,
+} from "react-icons/fa";
 
-const CategorySection = () => {
-    return (
-        <section className="category">
+function CategorySection() {
+  const navigate = useNavigate();
 
-            <h2>Shop by Category</h2>
+  const categories = [
+    {
+      name: "Electronics",
+      icon: <FaLaptop />,
+    },
+    {
+      name: "Fashion",
+      icon: <FaTshirt />,
+    },
+    {
+      name: "Home",
+      icon: <FaCouch />,
+    },
+    {
+      name: "Sports",
+      icon: <FaFootballBall />,
+    },
+    {
+      name: "Books",
+      icon: <FaBook />,
+    },
+  ];
 
-            <div className="category-grid">
+  const handleCategoryClick = (category) => {
+    navigate(`/products?category=${encodeURIComponent(category)}`);
+  };
 
-                {categories.map((item) => (
-                    <div className="category-card" key={item}>
-                        {item}
-                    </div>
-                ))}
+  return (
+    <section className="categories">
 
+      <div className="section-title">
+        <h2>Shop by Category</h2>
+        <p>Explore our most popular collections</p>
+      </div>
+
+      <div className="category-grid">
+        {categories.map((item) => (
+          <div
+            key={item.name}
+            className="category-card"
+            onClick={() => handleCategoryClick(item.name)}
+          >
+            <div className="category-icon">
+              {item.icon}
             </div>
 
-        </section>
-    );
-};
+            <h3>{item.name}</h3>
+          </div>
+        ))}
+      </div>
+
+    </section>
+  );
+}
 
 export default CategorySection;

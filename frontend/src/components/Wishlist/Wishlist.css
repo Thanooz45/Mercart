@@ -43,3 +43,12 @@
     cursor:pointer;
     margin-top:15px;
 }
+.wishlist-card {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}

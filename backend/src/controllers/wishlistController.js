@@ -5,6 +5,12 @@ exports.addToWishlist = (req, res) => {
   const userId = req.user.id;
   const { productId } = req.body;
 
+  if (!productId) {
+    return res.status(400).json({
+      message: "Product ID is required",
+    });
+  }
+
   const sql = `
     INSERT INTO wishlist (user_id, product_id)
     VALUES (?, ?)
@@ -18,7 +24,11 @@ exports.addToWishlist = (req, res) => {
         });
       }
 
-      return res.status(500).json(err);
+      console.error(err);
+
+      return res.status(500).json({
+        message: "Failed to add to wishlist",
+      });
     }
 
     res.status(201).json({
@@ -46,7 +56,13 @@ exports.getWishlist = (req, res) => {
   `;
 
   db.query(sql, [userId], (err, result) => {
-    if (err) return res.status(500).json(err);
+    if (err) {
+      console.error(err);
+
+      return res.status(500).json({
+        message: "Failed to fetch wishlist",
+      });
+    }
 
     res.json(result);
   });
@@ -54,13 +70,30 @@ exports.getWishlist = (req, res) => {
 
 // Remove from Wishlist
 exports.removeWishlist = (req, res) => {
-  const { id } = req.params;
+  console.log("Params:", req.params);
+
+  const userId = req.user.id;
+  const productId = req.params.productId;
+
+  console.log("User ID:", userId);
+  console.log("Product ID:", productId);
 
   db.query(
-    "DELETE FROM wishlist WHERE id=?",
-    [id],
-    (err) => {
-      if (err) return res.status(500).json(err);
+    "DELETE FROM wishlist WHERE user_id = ? AND product_id = ?",
+    [userId, productId],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: "Database error",
+        });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          message: "Wishlist item not found",
+        });
+      }
 
       res.json({
         message: "Removed from wishlist",

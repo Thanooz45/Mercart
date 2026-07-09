@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
-import UpdateProfile from "./UpdateProfile";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
+import { apiUrl } from "../../api";
 import "./Profile.css";
 
 const Profile = () => {
-  const [edit, setEdit] = useState(false);
-  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+  });
 
   useEffect(() => {
     const getProfile = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/user/profile",
+          apiUrl("/api/user/profile"),
           {
             credentials: "include",
           }
@@ -19,10 +25,12 @@ const Profile = () => {
         const data = await response.json();
 
         if (response.ok) {
-          setUser(data.user);
+          setUser(data);
+        } else {
+          alert(data.message);
         }
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     };
 
@@ -30,37 +38,49 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="profile-container">
-      {edit ? (
-        <UpdateProfile
-          user={user}
-          onSave={() => setEdit(false)}
-        />
-      ) : (
-        <>
-          <h2 className="profile-title">My Profile</h2>
+    <>
+      <Navbar />
 
-          <div className="profile-card">
-            <div className="profile-row">
-              <span className="profile-label">Name</span>
-              <span className="profile-value">{user.name}</span>
-            </div>
+      <div className="profile-container">
+        <div className="profile-card">
+          <h1>My Profile</h1>
 
-            <div className="profile-row">
-              <span className="profile-label">Email</span>
-              <span className="profile-value">{user.email}</span>
-            </div>
+          <div className="profile-field">
+            <label>Name</label>
+            <input
+              type="text"
+              value={user.name}
+              readOnly
+            />
+          </div>
+
+          <div className="profile-field">
+            <label>Email</label>
+            <input
+              type="text"
+              value={user.email}
+              readOnly
+            />
+          </div>
+
+          <div className="profile-buttons">
+            <button
+              className="home-btn"
+              onClick={() => navigate("/home")}
+            >
+              ← Back to Home
+            </button>
 
             <button
-              className="profile-btn"
-              onClick={() => setEdit(true)}
+              className="edit-btn"
+              onClick={() => navigate("/profile/update")}
             >
-              Update Profile
+              Edit Profile
             </button>
           </div>
-        </>
-      )}
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
 

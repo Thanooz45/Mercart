@@ -1,7 +1,12 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const isProduction = process.env.NODE_ENV === "production";
+const cookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? "none" : "lax",
+};
 
 // ================= REGISTER =================
 
@@ -9,7 +14,6 @@ const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -17,7 +21,6 @@ const register = async (req, res) => {
       });
     }
 
-    // Name validation
     if (name.trim().length < 3) {
       return res.status(400).json({
         success: false,
@@ -25,7 +28,6 @@ const register = async (req, res) => {
       });
     }
 
-    // Email validation
     const emailRegex =
       /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
@@ -36,7 +38,6 @@ const register = async (req, res) => {
       });
     }
 
-    // Password validation
     if (password.length < 8) {
       return res.status(400).json({
         success: false,
@@ -55,7 +56,6 @@ const register = async (req, res) => {
       });
     }
 
-    // Check if email already exists
     db.query(
       "SELECT id FROM users WHERE email = ?",
       [email.toLowerCase()],
@@ -105,14 +105,12 @@ const register = async (req, res) => {
   }
 };
 
-
 // ================= LOGIN =================
 
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Required fields
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -140,7 +138,6 @@ const login = async (req, res) => {
 
         const user = result[0];
 
-        // Compare Password
         const isPasswordValid = await bcrypt.compare(
           password,
           user.password
@@ -153,35 +150,32 @@ const login = async (req, res) => {
           });
         }
 
-        const token=jwt.sign(
+        const token = jwt.sign(
           {
-            id:user.id,
-            name:user.name,
-            email:user.email,
+            id: user.id,
+            name: user.name,
+            email: user.email,
           },
           process.env.JWT_SECRET,
           {
-            expiresIn:"1d",
+            expiresIn: "1d",
           }
         );
 
-
         res.cookie("token", token, {
-            httpOnly: true,
-            secure: false, // true after deployment with HTTPS
-            sameSite: "lax",
-            maxAge: 24 * 60 * 60 * 1000,
-          });
+          ...cookieOptions,
+          maxAge: 24 * 60 * 60 * 1000,
+        });
 
-          return res.status(200).json({
-            success: true,
-            message: "Login Successful",
-            user: {
-              id: user.id,
-              name: user.name,
-              email: user.email,
-            },
-          });
+        return res.status(200).json({
+          success: true,
+          message: "Login Successful",
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          },
+        });
       }
     );
   } catch (error) {
@@ -194,80 +188,104 @@ const login = async (req, res) => {
   }
 };
 
-
-////  log out
+// ================= LOGOUT =================
 
 const logout = (req, res) => {
-    res.clearCookie("token", {
-        httpOnly: true,
-        sameSite: "lax",
-        secure: false,
-    });
+  res.clearCookie("token", cookieOptions);
 
-    return res.status(200).json({
-        success: true,
-        message: "Logged out successfully",
-    });
+  return res.status(200).json({
+    success: true,
+    message: "Logged out successfully",
+  });
 };
 
-
-const updateProfile = (req, res) => {
-    const { name, email } = req.body;
-    const id = req.user.id;
-
-    if (!name || !email) {
-        return res.status(400).json({
-            success: false,
-            message: "All fields are required",
-        });
-    }
-
-    db.query(
-        "UPDATE users SET name = ?, email = ? WHERE id = ?",
-        [name, email.toLowerCase(), id],
-        (err, result) => {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: "Database Error",
-                });
-            }
-
-            return res.status(200).json({
-                success: true,
-                message: "Profile updated successfully",
-            });
-        }
-    );
-};
-
-
+// ================= GET PROFILE =================
 
 const getProfile = (req, res) => {
-    db.query(
-        "SELECT id, name, email FROM users WHERE id = ?",
-        [req.user.id],
-        (err, result) => {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: "Database Error",
-                });
-            }
+  db.query(
+    "SELECT id, name, email FROM users WHERE id = ?",
+    [req.user.id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Database Error",
+        });
+      }
 
-            if (result.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "User not found",
-                });
-            }
+      if (result.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
 
-            return res.status(200).json({
-                success: true,
-                user: result[0],
+      return res.status(200).json(result[0]);
+    }
+  );
+};
+
+// ================= UPDATE PROFILE =================
+
+const updateProfile = async (req, res) => {
+  const { name, email, password } = req.body;
+  const id = req.user.id;
+
+  try {
+    if (!name || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Name and Email are required",
+      });
+    }
+
+    if (password && password.trim() !== "") {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      db.query(
+        "UPDATE users SET name=?, email=?, password=? WHERE id=?",
+        [name.trim(), email.toLowerCase(), hashedPassword, id],
+        (err) => {
+          if (err) {
+            return res.status(500).json({
+              success: false,
+              message: "Database Error",
             });
+          }
+
+          return res.status(200).json({
+            success: true,
+            message: "Profile Updated Successfully",
+          });
         }
-    );
+      );
+    } else {
+      db.query(
+        "UPDATE users SET name=?, email=? WHERE id=?",
+        [name.trim(), email.toLowerCase(), id],
+        (err) => {
+          if (err) {
+            return res.status(500).json({
+              success: false,
+              message: "Database Error",
+            });
+          }
+
+          return res.status(200).json({
+            success: true,
+            message: "Profile Updated Successfully",
+          });
+        }
+      );
+    }
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 };
 
 module.exports = {

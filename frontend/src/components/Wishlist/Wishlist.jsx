@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import { apiUrl } from "../../api";
 import "./Wishlist.css";
 
 function Wishlist() {
@@ -9,7 +10,7 @@ function Wishlist() {
 
   const fetchWishlist = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/wishlist", {
+      const res = await fetch(apiUrl("/api/wishlist"), {
         credentials: "include",
       });
 
@@ -29,17 +30,34 @@ function Wishlist() {
     fetchWishlist();
   }, []);
 
-  const removeWishlist = async (id) => {
+  const removeWishlist = async (productId) => {
     try {
-      await fetch(`http://localhost:5000/api/wishlist/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const res = await fetch(
+        apiUrl(`/api/wishlist/${productId}`),
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
-      fetchWishlist();
+      const data = await res.json();
+
+      if (res.ok) {
+        fetchWishlist();
+      } else {
+        alert(data.message);
+      }
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const openProduct = (productId) => {
+    navigate(`/products/${productId}`, {
+      state: {
+        from: "/wishlist",
+      },
+    });
   };
 
   return (
@@ -54,8 +72,15 @@ function Wishlist() {
         ) : (
           <div className="wishlist-grid">
             {wishlist.map((item) => (
-              <div className="wishlist-card" key={item.id}>
-                <img src={item.image} alt={item.name} />
+              <div
+                className="wishlist-card"
+                key={item.id}
+                onClick={() => openProduct(item.productId)}
+              >
+                <img
+                  src={item.image}
+                  alt={item.name}
+                />
 
                 <h3>{item.name}</h3>
 
@@ -65,7 +90,10 @@ function Wishlist() {
 
                 <button
                   className="remove-btn"
-                  onClick={() => removeWishlist(item.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeWishlist(item.productId);
+                  }}
                 >
                   Remove
                 </button>

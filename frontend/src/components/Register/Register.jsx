@@ -1,132 +1,177 @@
-import {useState} from "react"
-import {useNavigate} from "react-router-dom";
-import Cookies from "js-cookie";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash, FaGift, FaShoppingBag, FaShieldAlt, FaTruck } from "react-icons/fa";
+import { apiUrl } from "../../api";
 import "./Register.css";
-const Register=()=>{
-    const[name,setName]=useState("");
-    const[email,setEmail]=useState("");
-    const[password,setPassword]=useState("");
-    const[isRegistered,setRegistered]=useState(false);
-    const [submitted, setSubmitted] = useState(false);
-    const navigate=useNavigate();
 
+const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegistered, setRegistered] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-    const onRegister = async (event) => {
-        event.preventDefault();
-        setSubmitted(true);
+  const onRegister = async (event) => {
+    event.preventDefault();
+    setSubmitted(true);
+    setLoading(true);
 
-        try {
-            const response = await fetch("http://localhost:5000/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({
-                    name,
-                    email,
-                    password,
-                }),
-            });
+    try {
+      const response = await fetch(apiUrl("/api/auth/register"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
 
-            const data = await response.json();
+      const data = await response.json();
 
-            if (response.ok) {
-                setRegistered(true);
-                setMessage(data.message);
+      if (response.ok) {
+        setRegistered(true);
+        setMessage(data.message || "Account created successfully.");
+        setName("");
+        setEmail("");
+        setPassword("");
 
-                setName("");
-                setEmail("");
-                setPassword("");
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        setRegistered(false);
+        setMessage(data.message || "Unable to create account.");
+      }
+    } catch (error) {
+      console.error(error);
+      setRegistered(false);
+      setMessage("Server Error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                setTimeout(() => {
-                    navigate("/login");
-                }, 1500);
-            } else {
-                setRegistered(false);
-                setMessage(data.message);
-            }
-        } catch (error) {
-            console.error(error);
-            setRegistered(false);
-            setMessage("Server Error");
-        }
-    };
+  return (
+    <main className="auth-page">
+      <section className="auth-shell">
+        <aside className="auth-showcase">
+          <button className="auth-brand" onClick={() => navigate("/")} type="button">
+            <FaShoppingBag aria-hidden="true" />
+            <span>X-Pro</span>
+          </button>
 
-
-    const onChangeName=(event)=> setName(event.target.value);
-    const onChangeEmail=(event)=> setEmail(event.target.value);
-    const onChangePassword=(event)=> setPassword(event.target.value);
-
-    return(
-    <div className="login-page">
-        <div className="auth-container">
-
-            <h1 className="auth-title">Register</h1>
-
-            <p className="auth-subtitle">
-                Create your X-Pro account
+          <div className="auth-showcase-copy">
+            <p className="auth-kicker">Join X-Pro</p>
+            <h1>Create an account built for easier shopping.</h1>
+            <p>
+              Save your wishlist, review your orders, and move through checkout
+              with less typing.
             </p>
+          </div>
 
-            <form onSubmit={onRegister}>
+          <div className="auth-perks">
+            <div>
+              <FaGift aria-hidden="true" />
+              <span>Personal wishlist</span>
+            </div>
+            <div>
+              <FaTruck aria-hidden="true" />
+              <span>Order tracking</span>
+            </div>
+            <div>
+              <FaShieldAlt aria-hidden="true" />
+              <span>Secure checkout</span>
+            </div>
+          </div>
+        </aside>
 
-                <div className="input-group">
-                    <label>Name</label>
-                    <input
-                        type="text"
-                        value={name}
-                        placeholder="Enter your name"
-                        onChange={onChangeName}
-                        required
-                    />
-                </div>
+        <section className="auth-card">
+          <div className="auth-heading">
+            <p>Create account</p>
+            <h2>Start shopping faster</h2>
+            <span>Enter your details to create your X-Pro account.</span>
+          </div>
 
-                <div className="input-group">
-                    <label>Email</label>
-                    <input
-                        type="email"
-                        value={email}
-                        placeholder="Enter your email"
-                        onChange={onChangeEmail}
-                        required
-                    />
-                </div>
+          <form onSubmit={onRegister} className="auth-form">
+            <div className="auth-field">
+              <label htmlFor="register-name">Full name</label>
+              <input
+                id="register-name"
+                type="text"
+                value={name}
+                placeholder="Your name"
+                onChange={(event) => setName(event.target.value)}
+                autoComplete="name"
+                required
+              />
+            </div>
 
-                <div className="input-group">
-                    <label>Password</label>
-                    <input
-                        type="password"
-                        value={password}
-                        placeholder="Create a password"
-                        onChange={onChangePassword}
-                        required
-                    />
-                </div>
+            <div className="auth-field">
+              <label htmlFor="register-email">Email address</label>
+              <input
+                id="register-email"
+                type="email"
+                value={email}
+                placeholder="you@example.com"
+                onChange={(event) => setEmail(event.target.value)}
+                autoComplete="email"
+                required
+              />
+            </div>
 
-                <button className="auth-btn" type="submit">
-                    Register
+            <div className="auth-field">
+              <label htmlFor="register-password">Password</label>
+              <div className="auth-password">
+                <input
+                  id="register-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  placeholder="Create a strong password"
+                  onChange={(event) => setPassword(event.target.value)}
+                  autoComplete="new-password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
+              </div>
+              <small>Use 8+ characters with uppercase, number, and symbol.</small>
+            </div>
 
-            </form>
+            <button className="auth-submit" type="submit" disabled={loading}>
+              {loading ? "Creating account..." : "Create account"}
+            </button>
+          </form>
 
-            {submitted && (
-                <p className={`message ${isRegistered ? "success" : "error"}`}>
-                    {message}
-                </p>
-            )}
-
-            <p className="auth-footer">
-                Already have an account?
-                <span onClick={() => navigate("/login")}>
-                    Login
-                </span>
+          {submitted && message && (
+            <p className={`auth-message ${isRegistered ? "success" : "error"}`}>
+              {message}
             </p>
+          )}
 
-        </div>
-    </div>
-);
-}
+          <p className="auth-switch">
+            Already have an account?
+            <button type="button" onClick={() => navigate("/login")}>
+              Sign in
+            </button>
+          </p>
+        </section>
+      </section>
+    </main>
+  );
+};
 
 export default Register;

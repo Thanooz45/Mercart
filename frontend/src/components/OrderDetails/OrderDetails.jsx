@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import { apiUrl } from "../../api";
 import "./OrderDetails.css";
 
 function OrderDetails() {
@@ -9,7 +10,7 @@ function OrderDetails() {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/orders/${id}`, {
+    fetch(apiUrl(`/api/orders/${id}`), {
       credentials: "include",
     })
       .then((res) => {

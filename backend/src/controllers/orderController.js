@@ -3,6 +3,7 @@ const db = require("../config/db");
 // Place Order (Checkout)
 const placeOrder = (req, res) => {
   const userId = req.user.id;
+  const paymentMethod = req.body.paymentMethod || "Cash on Delivery";
 
   // Get all cart items
   const cartSql = `
@@ -35,9 +36,6 @@ const placeOrder = (req, res) => {
       (sum, item) => sum + item.price * item.quantity,
       0
     );
-
-    // Change this later when you implement payment gateway
-    const paymentMethod = "Cash on Delivery";
 
     // Create Order
     const orderSql = `

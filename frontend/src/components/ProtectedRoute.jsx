@@ -1,12 +1,13 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { apiUrl } from "../api";
 
 const ProtectedRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/user/profile", {
+    fetch(apiUrl("/api/user/profile"), {
       credentials: "include",
     })
       .then((res) => {

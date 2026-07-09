@@ -1,16 +1,51 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { FaHeart, FaRegHeart, FaShoppingCart } from "react-icons/fa";
+import { apiUrl } from "../../api";
 import "./ProductCard.css";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { useState } from "react";
 
-function ProductCard({ product }) {
-  const navigate = useNavigate();
+function ProductCard({ product, wishlisted, refreshWishlist }) {
+  const toggleWishlist = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const [wishlisted, setWishlisted] = useState(false);
-
-  const handleAddToCart = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/cart", {
+      let response;
+
+      if (wishlisted) {
+        response = await fetch(apiUrl(`/api/wishlist/${product.id}`), {
+          method: "DELETE",
+          credentials: "include",
+        });
+      } else {
+        response = await fetch(apiUrl("/api/wishlist"), {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productId: product.id,
+          }),
+        });
+      }
+
+      if (response.ok) {
+        refreshWishlist();
+      } else {
+        const data = await response.json();
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const addToCart = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      const response = await fetch(apiUrl("/api/cart"), {
         method: "POST",
         credentials: "include",
         headers: {
@@ -22,107 +57,49 @@ function ProductCard({ product }) {
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message);
-
-        if (res.status === 401) {
-          navigate("/login");
-        }
-        return;
-      }
-
+      const data = await response.json();
       alert(data.message);
     } catch (err) {
       console.error(err);
-      alert("Something went wrong.");
-    }
-  };
-
-  const handleWishlist = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/wishlist", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          productId: product.id,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message);
-
-        if (res.status === 401) {
-          navigate("/login");
-        }
-        return;
-      }
-
-      setWishlisted(true);
-      alert(data.message);
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong.");
     }
   };
 
   return (
-    <div className="product-card">
-
+    <article className="store-product-card">
       <button
-        className="wishlist-btn"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleWishlist();
-        }}
+        className="store-wishlist-btn"
+        onClick={toggleWishlist}
+        aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
+        type="button"
       >
         {wishlisted ? <FaHeart /> : <FaRegHeart />}
       </button>
 
-      <Link to={`/products/${product.id}`}>
-        <img
-          src={product.image}
-          alt={product.name}
-          className="product-image"
-        />
-      </Link>
-
-      <div className="product-info">
-
-        <Link
-          to={`/products/${product.id}`}
-          className="product-link"
-        >
-          <h3>{product.name}</h3>
-        </Link>
-
-        <p className="category">{product.category}</p>
-
-        <div className="rating">
-          ⭐⭐⭐⭐⭐ <span>(4.8)</span>
+      <Link to={`/products/${product.id}`} className="store-product-link">
+        <div className="store-product-media">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="store-product-image"
+            loading="lazy"
+          />
         </div>
 
-        <h2>₹{product.price}</h2>
+        <div className="store-product-info">
+          <h3 className="store-product-title" title={product.name}>
+            {product.name}
+          </h3>
 
-        <p className="delivery">Free Delivery</p>
+          <p className="store-product-category">{product.category}</p>
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddToCart();
-          }}
-        >
-          🛒 Add to Cart
-        </button>
+          <span className="store-product-price">Rs. {product.price}</span>
+        </div>
+      </Link>
 
-      </div>
-    </div>
+      <button className="store-cart-btn" onClick={addToCart} type="button">
+        <FaShoppingCart aria-hidden="true" /> Add to Cart
+      </button>
+    </article>
   );
 }
 

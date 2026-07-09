@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import { apiUrl } from "../../api";
 import "./Payment.css";
 
 function Payment() {
@@ -9,9 +10,15 @@ function Payment() {
 
   const handlePayment = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/orders", {
+    const res = await fetch(apiUrl("/api/orders"), {
       method: "POST",
       credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        paymentMethod: method,
+      }),
     });
 
     const data = await res.json();
@@ -21,8 +28,13 @@ function Payment() {
       return;
     }
 
-    alert("Payment Successful!");
-    navigate("/orders");
+    navigate("/success", {
+      state: {
+        orderId: data.orderId,
+        total: data.total,
+      },
+      replace: true,
+    });
   } catch (err) {
     console.error(err);
     alert("Payment Failed");

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import { apiUrl } from "../../api";
 import "./Orders.css";
 
 function Orders() {
@@ -8,7 +9,7 @@ function Orders() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/orders", {
+    fetch(apiUrl("/api/orders"), {
       credentials: "include",
     })
       .then((res) => {

@@ -13,6 +13,6 @@ router.post("/", authMiddleware, addToWishlist);
 
 router.get("/", authMiddleware, getWishlist);
 
-router.delete("/:id", authMiddleware, removeWishlist);
+router.delete("/:productId", authMiddleware, removeWishlist);
 
 module.exports = router;

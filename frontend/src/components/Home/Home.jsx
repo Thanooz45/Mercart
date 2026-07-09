@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Navbar from "../../components/Navbar/Navbar";
-import Hero from "../../components/Hero/Hero";
-import CategorySection from "../../components/CategorySection/CategorySection";
-import FeaturedProducts from "../../components/FeaturedProducts/FeaturedProducts";
-import Footer from "../../components/Footer/Footer";
+import Navbar from "../Navbar/Navbar";
+import Hero from "../Hero/Hero";
+import CategorySection from "../CategorySection/CategorySection";
+import FeaturedProducts from "../FeaturedProducts/FeaturedProducts";
+import Footer from "../Footer/Footer";
+import { apiUrl } from "../../api";
 
 import "./Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const getProfile = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/user/profile",
+          apiUrl("/api/user/profile"),
           {
             credentials: "include",
           }
@@ -26,13 +27,14 @@ const Home = () => {
 
         const data = await response.json();
 
-        if (response.ok) {
-          setUser(data.user);
-        } else {
+        if (!response.ok) {
           navigate("/login");
+          return;
         }
-      } catch (error) {
-        console.log(error);
+
+        setUser(data);
+      } catch (err) {
+        console.log(err);
         navigate("/login");
       }
     };
@@ -40,28 +42,10 @@ const Home = () => {
     getProfile();
   }, [navigate]);
 
-  const handleLogout = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/logout",
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        navigate("/login");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div className="home-page">
 
-      <Navbar />
+      <Navbar user={user} />
 
       <Hero />
 

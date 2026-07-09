@@ -1,30 +1,46 @@
+import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 
 const Hero = () => {
-    return (
-        <section className="hero">
+  const navigate = useNavigate();
 
-            <div className="hero-left">
+  return (
+    <section className="hero">
 
-                <h1>Discover Amazing Products</h1>
+      <div className="hero-left">
 
-                <p>
-                    Shop electronics, fashion, home essentials and much more.
-                </p>
+        <span className="hero-tag">
+          Welcome to XPro
+        </span>
 
-                <button>Shop Now</button>
+        <h1>
+          Discover Amazing Products
+        </h1>
 
-            </div>
+        <p>
+          Shop Electronics, Fashion, Home Essentials,
+          Sports, Books and much more at the best prices.
+        </p>
 
-            <div className="hero-right">
-    <img
-        src="https://images.unsplash.com/photo-1512436991641-6745cdb1723?auto=format&fit=crop&w=800&q=80"
-        alt="shopping"
-    />
-</div>
+        <button
+          onClick={() => navigate("/products")}
+        >
+          Shop Now
+        </button>
 
-        </section>
-    );
+      </div>
+
+      <div className="hero-right">
+
+        <img
+          src="https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&w=900"
+          alt="Shopping"
+        />
+
+      </div>
+
+    </section>
+  );
 };
 
 export default Hero;

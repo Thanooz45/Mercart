@@ -2,40 +2,142 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:60px;
-    background:#f8f9fa;
+    gap:60px;
+
+    padding:55px 8%;
+    min-height:68vh;
+
+    background:linear-gradient(135deg,#f8f9fa,#eef2f7);
 }
 
 .hero-left{
-    width:45%;
+    flex:1;
+}
+
+.hero-tag{
+    display:inline-block;
+    background:#ff9900;
+    color:#111827;
+
+    padding:8px 18px;
+    border-radius:30px;
+
+    font-size:15px;
+    font-weight:600;
+
+    margin-bottom:18px;
 }
 
 .hero-left h1{
-    font-size:48px;
+    font-size:54px;
+    line-height:1.15;
+    color:#131921;
     margin-bottom:20px;
 }
 
 .hero-left p{
-    font-size:20px;
+    font-size:19px;
+    line-height:1.7;
     color:#555;
-    margin-bottom:25px;
+    max-width:520px;
+    margin-bottom:30px;
 }
 
 .hero-left button{
-    padding:14px 28px;
     background:#131921;
     color:white;
+
     border:none;
+    border-radius:10px;
+
+    padding:15px 34px;
+
+    font-size:17px;
+    font-weight:600;
+
     cursor:pointer;
-    border-radius:8px;
-    font-size:18px;
+    transition:.3s;
+}
+
+.hero-left button:hover{
+    background:#ff9900;
+    color:#131921;
+    transform:translateY(-3px);
 }
 
 .hero-right{
-    width:45%;
+    flex:1;
+    display:flex;
+    justify-content:center;
 }
 
 .hero-right img{
     width:100%;
-    border-radius:15px;
+    max-width:560px;
+    height:380px;
+    object-fit:cover;
+
+    border-radius:20px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
+
+    transition:.3s;
+}
+
+.hero-right img:hover{
+    transform:scale(1.02);
+}
+
+@media(max-width:992px){
+
+.hero{
+    flex-direction:column;
+    text-align:center;
+    padding:50px 25px;
+    min-height:auto;
+}
+
+.hero-left h1{
+    font-size:42px;
+}
+
+.hero-left p{
+    font-size:17px;
+    margin:0 auto 25px;
+}
+
+.hero-right{
+    margin-top:25px;
+}
+
+.hero-right img{
+    max-width:450px;
+    height:300px;
+}
+
+}
+
+@media(max-width:600px){
+
+.hero{
+    padding:40px 20px;
+}
+
+.hero-left h1{
+    font-size:34px;
+}
+
+.hero-left p{
+    font-size:16px;
+}
+
+.hero-left button{
+    width:100%;
+}
+
+.hero-right img{
+    width:100%;
+    height:230px;
+}
+
 }

@@ -1,102 +1,132 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { FaShoppingCart, FaStar } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
+import { apiUrl } from "../../api";
 import "./ProductDetails.css";
 
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const backPath = location.state?.from || "/products";
+
+  const backText =
+    backPath === "/wishlist"
+      ? "Back to Wishlist"
+      : backPath === "/cart"
+      ? "Back to Cart"
+      : "Back to Products";
 
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(apiUrl(`/api/products/${id}`))
       .then((res) => res.json())
       .then((data) => setProduct(data))
       .catch((err) => console.error(err));
   }, [id]);
 
   const handleAddToCart = async () => {
-  try {
-    const res = await fetch("http://localhost:5000/api/cart", {
-      method: "POST",
-      credentials: "include", // Send JWT cookie
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        productId: product.id,
-        quantity: 1,
-      }),
-    });
+    try {
+      const res = await fetch(apiUrl("/api/cart"), {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          quantity: 1,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      alert(data.message);
-      if (res.status === 401) {
-        navigate("/login");
+      if (!res.ok) {
+        alert(data.message);
+
+        if (res.status === 401) {
+          navigate("/login");
+        }
+
+        return;
       }
-      return;
-    }
 
-    alert(data.message);
-    navigate("/cart");
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong.");
+      alert(data.message);
+      navigate("/cart");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    }
+  };
+
+  if (!product) {
+    return (
+      <>
+        <Navbar />
+        <div className="product-details-page">
+          <h2 className="product-details-loading">Loading...</h2>
+        </div>
+      </>
+    );
   }
-};
-  if (!product) return <h2>Loading...</h2>;
 
   return (
     <>
       <Navbar />
 
-      <div className="product-details">
-        <Link to="/products" className="back-btn">
-          ← Back to Products
-        </Link>
+      <main className="product-details-page">
+        <button
+          className="product-details-back"
+          onClick={() => navigate(backPath)}
+          type="button"
+        >
+          <span aria-hidden="true">&larr;</span> {backText}
+        </button>
 
-        <div className="details-container">
-          <div className="image-section">
+        <section className="product-details-shell">
+          <div className="product-details-image-panel">
             <img src={product.image} alt={product.name} />
           </div>
 
-          <div className="info-section">
+          <div className="product-details-info">
+            <p className="product-details-category">{product.category}</p>
+
             <h1>{product.name}</h1>
 
-            <p className="category">{product.category}</p>
-
-            <div className="rating">
-              ⭐⭐⭐⭐⭐ (4.8)
+            <div className="product-details-rating" aria-label="Rated 4.8 out of 5">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar key={star} aria-hidden="true" />
+              ))}
+              <span>(4.8)</span>
             </div>
 
-            <h2>₹{product.price}</h2>
+            <h2>Rs. {product.price}</h2>
 
-            <p className="description">
-              {product.description}
+            <p className="product-details-description">{product.description}</p>
+
+            <p className="product-details-stock">
+              Stock Available: {product.stock}
             </p>
 
-            <p className="stock">
-              Stock Available : {product.stock}
-            </p>
-
-            <div className="buttons">
+            <div className="product-details-actions">
               <button
-                className="cart-btn"
+                className="product-details-cart"
                 onClick={handleAddToCart}
+                type="button"
               >
-                🛒 Add to Cart
+                <FaShoppingCart aria-hidden="true" /> Add to Cart
               </button>
 
-              <button className="buy-btn">
+              <button className="product-details-buy" type="button">
                 Buy Now
               </button>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </>
   );
 }

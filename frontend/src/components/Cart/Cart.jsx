@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import "./Cart.css";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../../api";
 
 function Cart() {
   const [cart, setCart] = useState([]);
@@ -9,7 +10,7 @@ function Cart() {
 
   const fetchCart = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/cart", {
+      const res = await fetch(apiUrl("/api/cart"), {
         credentials: "include",
       });
 
@@ -33,7 +34,7 @@ function Cart() {
     if (quantity < 1) return;
 
     try {
-      await fetch(`http://localhost:5000/api/cart/${id}`, {
+      await fetch(apiUrl(`/api/cart/${id}`), {
         method: "PUT",
         credentials: "include",
         headers: {
@@ -52,7 +53,7 @@ function Cart() {
 
   const removeItem = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/cart/${id}`, {
+      await fetch(apiUrl(`/api/cart/${id}`), {
         method: "DELETE",
         credentials: "include",
       });
@@ -61,6 +62,14 @@ function Cart() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const openProduct = (productId) => {
+    navigate(`/products/${productId}`, {
+      state: {
+        from: "/cart",
+      },
+    });
   };
 
   const total = cart.reduce(
@@ -81,10 +90,22 @@ function Cart() {
           <>
             {cart.map((item) => (
               <div className="cart-card" key={item.id}>
-                <img src={item.image} alt={item.name} />
+
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => openProduct(item.productId)}
+                />
 
                 <div className="cart-info">
-                  <h2>{item.name}</h2>
+
+                  <h2
+                    style={{ cursor: "pointer" }}
+                    onClick={() => openProduct(item.productId)}
+                  >
+                    {item.name}
+                  </h2>
 
                   <h3>₹{item.price}</h3>
 

@@ -1,65 +1,187 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { apiUrl } from "../../api";
 import "./Navbar.css";
 
-import { Link } from "react-router-dom";
-
 import {
-    FaSearch,
-    FaShoppingCart,
-    FaHeart,
-    FaUser
+  FaSearch,
+  FaShoppingCart,
+  FaHeart,
+  FaUser,
+  FaHome,
+  FaBox,
+  FaBars,
+  FaTimes,
+  FaSignOutAlt,
 } from "react-icons/fa";
 
 const Navbar = () => {
-    return (
-        <nav className="navbar">
+  const navigate = useNavigate();
 
-            <div className="navbar-logo">
-                <Link to="/">XPro</Link>
-            </div>
+  const [search, setSearch] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
-            <div className="navbar-search">
+  const handleSearch = () => {
+    const value = search.trim();
 
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                />
+    if (value === "") {
+      navigate("/products");
+      return;
+    }
 
-                <button>
-                    <FaSearch />
-                </button>
+    navigate(`/products?search=${encodeURIComponent(value)}`);
+    setMenuOpen(false);
+  };
 
-            </div>
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
-            <div className="navbar-links">
+  const handleLogout = async () => {
+    try {
+      await fetch(apiUrl("/api/auth/logout"), {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      localStorage.removeItem("user");
+      setMenuOpen(false);
+      navigate("/login", { replace: true });
+    }
+  };
 
-                <Link to="/home">
-                    Home
-                </Link>
+  return (
+    <>
+      <nav className="navbar">
 
-                <Link to="/products">
-                    Products
-                </Link>
+        <div className="navbar-logo">
+          <Link to="/home">XPro</Link>
+        </div>
 
-                <Link to="/wishlist" className="nav-icon">
-  <FaHeart />
-</Link>
+        <div className="navbar-search">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
 
-                <Link to="/cart">
-    <FaShoppingCart />
-</Link>
+          <button onClick={handleSearch}>
+            <FaSearch />
+          </button>
+        </div>
 
-<Link to="/orders">
-  📦 
-</Link>
+        <div className="desktop-links">
 
-                <Link to="/profile">
-                    <FaUser />
-                </Link>
+          <Link to="/home">
+            <FaHome />
+            <span>Home</span>
+          </Link>
 
-            </div>
+          <Link to="/products">
+            Products
+          </Link>
 
-        </nav>
-    );
+          <Link to="/wishlist">
+            <FaHeart />
+          </Link>
+
+          <Link to="/cart">
+            <FaShoppingCart />
+          </Link>
+
+          <Link to="/orders">
+            <FaBox />
+          </Link>
+
+          <Link to="/profile">
+            <FaUser />
+          </Link>
+
+          <button
+            className="logout-btn"
+            onClick={handleLogout}
+            type="button"
+            aria-label="Logout"
+          >
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+
+        </div>
+
+        <button
+          className="menu-btn"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+      </nav>
+
+      {menuOpen && (
+        <div className="mobile-menu">
+
+          <Link
+            to="/home"
+            onClick={() => setMenuOpen(false)}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/products"
+            onClick={() => setMenuOpen(false)}
+          >
+            Products
+          </Link>
+
+          <Link
+            to="/wishlist"
+            onClick={() => setMenuOpen(false)}
+          >
+            Wishlist
+          </Link>
+
+          <Link
+            to="/cart"
+            onClick={() => setMenuOpen(false)}
+          >
+            Cart
+          </Link>
+
+          <Link
+            to="/orders"
+            onClick={() => setMenuOpen(false)}
+          >
+            Orders
+          </Link>
+
+          <Link
+            to="/profile"
+            onClick={() => setMenuOpen(false)}
+          >
+            Profile
+          </Link>
+
+          <button
+            className="mobile-logout-btn"
+            onClick={handleLogout}
+            type="button"
+          >
+            <FaSignOutAlt />
+            Logout
+          </button>
+
+        </div>
+      )}
+    </>
+  );
 };
 
 export default Navbar;

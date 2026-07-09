@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
+import { apiUrl } from "../../api";
 import "./Checkout.css";
 
 function Checkout() {
@@ -8,7 +9,7 @@ function Checkout() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-  fetch("http://localhost:5000/api/cart", {
+  fetch(apiUrl("/api/cart"), {
     credentials: "include",
   })
     .then((res) => {
