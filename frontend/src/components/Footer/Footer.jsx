@@ -7,7 +7,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section footer-brand">
-          <h2 className="footer-title">XPro</h2>
+          <h2 className="footer-title">Mercart</h2>
           <p className="footer-text">
             A smarter ecommerce experience for discovering products, saving
             favourites, and managing orders in one place.
@@ -66,7 +66,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="footer-bottom">© 2026 XPro. All Rights Reserved.</div>
+      <div className="footer-bottom">© 2026 Mercart. All Rights Reserved.</div>
     </footer>
   );
 };

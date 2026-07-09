@@ -70,12 +70,12 @@ function Login() {
         <aside className="auth-showcase">
           <button className="auth-brand" onClick={() => navigate("/")} type="button">
             <FaShoppingBag aria-hidden="true" />
-            <span>X-Pro</span>
+            <span>Mercart</span>
           </button>
 
           <div className="auth-showcase-copy">
             <p className="auth-kicker">Welcome back</p>
-            <h1>Shop smarter with your X-Pro account.</h1>
+            <h1>Shop smarter with your Mercart account.</h1>
             <p>
               Track orders, save favourites, and checkout faster every time you
               visit.
@@ -147,7 +147,7 @@ function Login() {
           )}
 
           <p className="auth-switch">
-            New to X-Pro?
+            New to Mercart?
             <button type="button" onClick={() => navigate("/register")}>
               Create account
             </button>

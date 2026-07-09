@@ -10,7 +10,7 @@ const Hero = () => {
       <div className="hero-left">
 
         <span className="hero-tag">
-          Welcome to XPro
+          Welcome to Mercart
         </span>
 
         <h1>

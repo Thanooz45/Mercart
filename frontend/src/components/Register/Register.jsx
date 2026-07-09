@@ -66,11 +66,11 @@ const Register = () => {
         <aside className="auth-showcase">
           <button className="auth-brand" onClick={() => navigate("/")} type="button">
             <FaShoppingBag aria-hidden="true" />
-            <span>X-Pro</span>
+            <span>Mercart</span>
           </button>
 
           <div className="auth-showcase-copy">
-            <p className="auth-kicker">Join X-Pro</p>
+            <p className="auth-kicker">Join Mercart</p>
             <h1>Create an account built for easier shopping.</h1>
             <p>
               Save your wishlist, review your orders, and move through checkout
@@ -98,7 +98,7 @@ const Register = () => {
           <div className="auth-heading">
             <p>Create account</p>
             <h2>Start shopping faster</h2>
-            <span>Enter your details to create your X-Pro account.</span>
+            <span>Enter your details to create your Mercart account.</span>
           </div>
 
           <form onSubmit={onRegister} className="auth-form">

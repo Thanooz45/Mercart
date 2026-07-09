@@ -1,4 +1,4 @@
-# Xpro
+# Mercart
 
 React app built with Vite.
 

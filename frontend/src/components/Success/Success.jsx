@@ -22,7 +22,7 @@ function Success() {
           <h1>Payment Successful!</h1>
 
           <p>
-            Thank you for shopping with XPro. Your order has been placed
+            Thank you for shopping with Mercart. Your order has been placed
             successfully.
           </p>
 

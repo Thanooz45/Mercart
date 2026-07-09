@@ -59,7 +59,7 @@ const Navbar = () => {
       <nav className="navbar">
 
         <div className="navbar-logo">
-          <Link to="/home">XPro</Link>
+          <Link to="/home">Mercart</Link>
         </div>
 
         <div className="navbar-search">
